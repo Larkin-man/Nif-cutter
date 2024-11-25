@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 #include <stdio.h>
 #include <vcl.h>
+#include "HelpForm.h"
 #pragma hdrstop
 
 #include "source_cutter.h"
@@ -26,6 +27,8 @@ void __fastcall TForm1::OpenClick(TObject *Sender)
    	//in = _wfopen(L"file.bin", Edit1->Text.c_str());
 		if (!in)
 			return ShowMessage ( "Cannot open file.");
+      SetBtn->Enabled = true;
+      RefreshNum->Visible = false;
    }
 }
 //---------------------------------------------------------------------------
@@ -37,7 +40,7 @@ void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
 		fclose(out);
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::SetClick(TObject *Sender)
+void __fastcall TForm1::SetBtnClick(TObject *Sender)
 {
 	if (in == NULL)
       return;
@@ -56,18 +59,19 @@ void __fastcall TForm1::SetClick(TObject *Sender)
       int b : 16;
       int c : 16;
    } d;
-   if (nTri > 222)
+   if (nTri > 9000)
    	return;
-
+   Dots->Strings->Clear();
    for (int i = 0; i < nTri; i++)
    {
    	fread(&d, 6, 1, in);
      	Dots->InsertRow(i, IntToStr(d.a)+" "+IntToStr(d.b)+" "+IntToStr(d.c), true);
    }
    //->Cells[1][0] = sizeof(d);
+   RefreshNum->Visible = false;
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::Button1Click(TObject *Sender)
+void __fastcall TForm1::SaveBtnClick(TObject *Sender)
 {
 	struct Data
    {
@@ -79,7 +83,7 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::BitBtn1Click(TObject *Sender)
+void __fastcall TForm1::RefreshClick(TObject *Sender)
 {
 	struct Data
    {
@@ -114,12 +118,12 @@ void __fastcall TForm1::BitBtn1Click(TObject *Sender)
       	continue;
       }
       d.c = row.ToIntDef(-1);
-      if (d.a < 1 || d.b < 1 || d.c < 1)
+      if (d.a < 0 || d.b < 0 || d.c < 0)
       {
        	Dots->Cells[1][i] = "";
       	continue;
       }
-      Dots->Cells[1][i] = Dots->Cells[1][i] + ")"+ IntToStr(d.a)+","+IntToStr(d.b)+","+IntToStr(d.c);
+    	Dots->Cells[1][i] = IntToStr(d.a)+" "+IntToStr(d.b)+" "+IntToStr(d.c);
    }
    for (int i = 0; i < Dots->RowCount; i++)
    {
@@ -131,6 +135,48 @@ void __fastcall TForm1::BitBtn1Click(TObject *Sender)
       else
      		Dots->Cells[0][i] = i;
    }
+  	Base->Cells[1][0] = Dots->RowCount;
+   Base->Cells[1][1] = Dots->RowCount * 3;
+   RefreshNum->Visible = false;
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TForm1::BitBtn2Click(TObject *Sender)
+{
+	Form2->Show();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::BaseSetEditText(TObject *Sender, int ACol, int ARow, const UnicodeString Value)
+{
+	RefreshNum->Tag = ARow;
+ 	RefreshNum->Visible = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::RefreshNumClick(TObject *Sender)
+{
+ 	if (RefreshNum->Tag == 1)
+   {
+   	int d = Base->Cells[1][1].ToIntDef(-1);
+      if (d < 0)
+         d = 0;
+      if (d % 3 != 0)
+       	return ShowMessage("Points should be three times more, than triangles.");
+      Base->Cells[1][0] = d / 3;
+      //Dots->Strings->Count = d / 3;
+      return;
+   }
+   int d = Base->Cells[1][0].ToIntDef(-1);
+   if (d < 0)
+   	d = 0;
+   Base->Cells[1][0] = d;
+   Base->Cells[1][1] = d * 3;
+   //Dots->Strings->Count = d;
+}
+//---------------------------------------------------------------------------
+void TForm1::SetRowCount(int r)
+{
+
+}
+//---------------------------------------------------------------------------
