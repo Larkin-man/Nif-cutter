@@ -1,32 +1,43 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
+*.ddp
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
+#*.dll
+#*.bpl
+#*.bpi
+*.dcp
 *.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
+#*.apk
+*.pch
+*.drc
+*.map
+*.dres
+*.rsm
+*.tds
+*.dcu
+#*.lib
 *.a
-*.lib
-
-# Executables
+*.o
+*.ocx
+*.cfg
+#*.hpp
+#*Resource.rc
+*.local
+*.identcache
+*.projdata
+*.tvsconfig
+*.dsk
+*.stat
+*.~*
+*.\#*
+*.ilc
+*.ild
+*.ilf
+*.ils
 *.exe
-*.out
-*.app
+*.txt
+*.cgl
+
+Thumbs.db
+
+__history/
+__recovery/
+modules/
