@@ -4,7 +4,7 @@ object Form1: TForm1
   BorderIcons = [biSystemMenu, biMinimize, biMaximize, biHelp]
   Caption = 'Nif cutter'
   ClientHeight = 701
-  ClientWidth = 352
+  ClientWidth = 336
   Color = clBtnFace
   Font.Charset = RUSSIAN_CHARSET
   Font.Color = clWindowText
@@ -13,6 +13,9 @@ object Form1: TForm1
   Font.Style = []
   OldCreateOrder = False
   OnClose = FormClose
+  DesignSize = (
+    336
+    701)
   PixelsPerInch = 120
   TextHeight = 25
   object Offset: TLabeledEdit
@@ -24,7 +27,7 @@ object Form1: TForm1
     EditLabel.Height = 25
     EditLabel.Caption = 'Offset of '#39'Num Triangles'#39
     NumbersOnly = True
-    TabOrder = 0
+    TabOrder = 2
     Text = '1353'
   end
   object Open: TButton
@@ -33,7 +36,7 @@ object Form1: TForm1
     Width = 97
     Height = 32
     Caption = 'Open Nif'
-    TabOrder = 1
+    TabOrder = 0
     OnClick = OpenClick
   end
   object SetBtn: TButton
@@ -43,7 +46,7 @@ object Form1: TForm1
     Height = 32
     Caption = 'Set'
     Enabled = False
-    TabOrder = 2
+    TabOrder = 3
     OnClick = SetBtnClick
   end
   object Base: TValueListEditor
@@ -60,13 +63,13 @@ object Form1: TForm1
     Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
-    Options = [goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goAlwaysShowEditor, goThumbTracking]
+    Options = [goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing]
     ParentFont = False
     ScrollBars = ssNone
     Strings.Strings = (
       'Num Triangles= '
       'Num Triangle Points= ')
-    TabOrder = 3
+    TabOrder = 4
     OnSetEditText = BaseSetEditText
     ColWidths = (
       160
@@ -80,6 +83,7 @@ object Form1: TForm1
     Top = 168
     Width = 257
     Height = 525
+    Anchors = [akLeft, akTop, akBottom]
     DefaultColWidth = 40
     DisplayOptions = [doAutoColResize, doKeyColFixed]
     FixedCols = 1
@@ -94,18 +98,19 @@ object Form1: TForm1
     Strings.Strings = (
       'Triangles= '
       'Num Triangle Points= ')
-    TabOrder = 4
+    TabOrder = 6
     ColWidths = (
       40
       211)
   end
   object SaveBtn: TButton
     Left = 271
-    Top = 663
-    Width = 75
-    Height = 25
+    Top = 656
+    Width = 58
+    Height = 32
+    Anchors = [akLeft, akBottom]
     Caption = 'Save'
-    TabOrder = 5
+    TabOrder = 8
     OnClick = SaveBtnClick
   end
   object Refresh: TBitBtn
@@ -134,19 +139,20 @@ object Form1: TForm1
     ModalResult = 4
     NumGlyphs = 2
     ParentDoubleBuffered = False
-    TabOrder = 6
+    TabOrder = 7
     OnClick = RefreshClick
   end
-  object BitBtn2: TBitBtn
-    Left = 111
+  object Help: TBitBtn
+    Left = 246
     Top = 8
     Width = 82
     Height = 32
+    Anchors = [akTop, akRight]
     DoubleBuffered = True
     Kind = bkHelp
     ParentDoubleBuffered = False
-    TabOrder = 7
-    OnClick = BitBtn2Click
+    TabOrder = 1
+    OnClick = HelpClick
   end
   object RefreshNum: TBitBtn
     Left = 127
@@ -174,12 +180,21 @@ object Form1: TForm1
     ModalResult = 4
     NumGlyphs = 2
     ParentDoubleBuffered = False
-    TabOrder = 8
+    TabOrder = 5
     Visible = False
     OnClick = RefreshNumClick
   end
-  object OpenDialog1: TOpenDialog
+  object Memo1: TMemo
     Left = 272
-    Top = 8
+    Top = 240
+    Width = 57
+    Height = 321
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 9
+    WordWrap = False
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 168
   end
 end
