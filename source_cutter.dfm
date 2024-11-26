@@ -99,6 +99,7 @@ object Form1: TForm1
       'Triangles= '
       'Num Triangle Points= ')
     TabOrder = 6
+    OnKeyUp = DotsKeyUp
     ColWidths = (
       40
       211)
@@ -183,6 +184,49 @@ object Form1: TForm1
     TabOrder = 5
     Visible = False
     OnClick = RefreshNumClick
+  end
+  object Memo1: TMemo
+    Left = 272
+    Top = 241
+    Width = 65
+    Height = 408
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    Lines.Strings = (
+      'Memo1')
+    ParentFont = False
+    ScrollBars = ssVertical
+    TabOrder = 9
+    WordWrap = False
+  end
+  object Button1: TButton
+    Left = 222
+    Top = 42
+    Width = 75
+    Height = 25
+    Caption = 'vector'
+    TabOrder = 10
+    OnClick = Button1Click
+  end
+  object Delete: TCheckBox
+    Left = 271
+    Top = 218
+    Width = 97
+    Height = 17
+    Caption = 'Delete'
+    Checked = True
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+    State = cbChecked
+    TabOrder = 11
   end
   object OpenDialog1: TOpenDialog
     Left = 168
