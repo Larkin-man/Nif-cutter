@@ -184,16 +184,6 @@ object Form1: TForm1
     Visible = False
     OnClick = RefreshNumClick
   end
-  object Memo1: TMemo
-    Left = 272
-    Top = 240
-    Width = 57
-    Height = 321
-    Lines.Strings = (
-      'Memo1')
-    TabOrder = 9
-    WordWrap = False
-  end
   object OpenDialog1: TOpenDialog
     Left = 168
   end

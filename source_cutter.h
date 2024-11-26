@@ -27,7 +27,6 @@ __published:	// IDE-managed Components
 	TBitBtn *Refresh;
 	TBitBtn *Help;
 	TBitBtn *RefreshNum;
-	TMemo *Memo1;
 	void __fastcall OpenClick(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall SetBtnClick(TObject *Sender);
@@ -47,6 +46,8 @@ public:		// User declarations
    int nTri;
    int nDot;
    bool write;
+   byte *mem;
+   void Write(int size);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;

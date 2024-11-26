@@ -17,6 +17,7 @@ __fastcall TForm1::TForm1(TComponent* Owner)	: TForm(Owner)
    OpenDialog1->InitialDir = GetCurrentDir();
    Dots->Strings->Clear();
    write = false;
+   mem = NULL;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::OpenClick(TObject *Sender)
@@ -26,11 +27,6 @@ void __fastcall TForm1::OpenClick(TObject *Sender)
    	file = OpenDialog1->FileName;
       Form1->Caption = "Nif cutter - "+file;
 		in = fopen(file.c_str(), "rb");
-      Memo1->Lines->Append(file);
-      Memo1->Lines->Append(OpenDialog1->FileName);
-      Memo1->Lines->Append(OpenDialog1->Filter);
-      Memo1->Lines->Append(OpenDialog1->Title);
-      Memo1->Lines->Append(OpenDialog1->DefaultExt);
       file = OpenDialog1->FileName;
 		if (!in)
 			return ShowMessage ( "Cannot open file.");
@@ -45,6 +41,7 @@ void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
 		fclose(in);
 	if (out)
 		fclose(out);
+   delete []mem;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::SetBtnClick(TObject *Sender)
@@ -187,16 +184,49 @@ void __fastcall TForm1::SaveBtnClick(TObject *Sender)
    //Base->Cells[1][1] = Dots->RowCount;
    //Base->Cells[1][1] = Base->Cells[1][1] + IntToStr(Dots->Strings->Count);
  	//SetRowCount(Base->Cells[1][0].ToIntDef(0));
-   String save = file+"_c";
+   int n = Base->Cells[1][0].ToIntDef(-1);
+   int d = Base->Cells[1][1].ToIntDef(-1);
+   if (n < 0 || d < 0)
+   	return;
+   String save = file;
+   for (int i = file.Length(); i > 0; i--)
+   	if (file[i] == '\\')
+      {
+         save.Insert("X_", i+1);
+         break;
+      }
  	out = fopen(save.c_str(), "wb");
    if (out == NULL)
       return ShowMessage("Cannot create nif file.");
-  	fwrite(&nTri, 2, 1, out);
-   fwrite(&nDot, 4, 1, out);
+   fseek(in, 0, SEEK_END);
+   int EoF = ftell(in);
+   fseek(in, 0, SEEK_SET);
+   Write(pos);
+  	fwrite(&n, 2, 1, out);
+   fwrite(&d, 4, 1, out);
    write = true;
    RefreshClick(Sender);
    write = false;
+   fseek(in, 2+4+nTri*6, SEEK_CUR);
+   Write(EoF - ftell(in));
    fclose(out);
-
+   delete []mem;
+   mem = NULL;
+}
+//---------------------------------------------------------------------------
+void TForm1::Write(int size)
+{
+ 	static int cap = 65536;
+   if (mem == NULL)
+   	mem = new byte[cap];
+   int Len;
+   for (Len = cap; Len < size; Len += cap)
+   {
+      fread (mem, cap, 1, in);
+      fwrite(mem, cap, 1, out);
+   }
+   Len = size+cap-Len;
+   fread (mem, Len, 1, in);
+   fwrite(mem, Len, 1, out);
 }
 //---------------------------------------------------------------------------

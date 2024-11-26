@@ -60,14 +60,6 @@
 			<TASM_Debugging>None</TASM_Debugging>
 		</PropertyGroup>
 		<ItemGroup>
-			<CppCompile Include="NifCutter.cpp">
-				<BuildOrder>0</BuildOrder>
-			</CppCompile>
-			<CppCompile Include="HelpForm.cpp">
-				<Form>Form2</Form>
-				<DependentOn>HelpForm.h</DependentOn>
-				<BuildOrder>3</BuildOrder>
-			</CppCompile>
 			<CppCompile Include="source_cutter.cpp">
 				<Form>Form1</Form>
 				<DependentOn>source_cutter.h</DependentOn>
@@ -76,8 +68,16 @@
 			<ResFiles Include="NifCutter.res">
 				<BuildOrder>1</BuildOrder>
 			</ResFiles>
-			<FormResources Include="HelpForm.dfm"/>
+			<CppCompile Include="NifCutter.cpp">
+				<BuildOrder>0</BuildOrder>
+			</CppCompile>
+			<CppCompile Include="HelpForm.cpp">
+				<Form>Form2</Form>
+				<DependentOn>HelpForm.h</DependentOn>
+				<BuildOrder>3</BuildOrder>
+			</CppCompile>
 			<FormResources Include="source_cutter.dfm"/>
+			<FormResources Include="HelpForm.dfm"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
