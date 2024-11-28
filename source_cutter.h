@@ -30,6 +30,8 @@ __published:	// IDE-managed Components
 	TMemo *Memo1;
 	TButton *Button1;
 	TCheckBox *Delete;
+	TLabeledEdit *DelAlle;
+	TButton *DelAll;
 	void __fastcall OpenClick(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall SetBtnClick(TObject *Sender);
@@ -40,6 +42,7 @@ __published:	// IDE-managed Components
 	void __fastcall RefreshNumClick(TObject *Sender);
 	void __fastcall DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall DelAllClick(TObject *Sender);
 
 private:	// User declarations
 public:		// User declarations

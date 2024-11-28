@@ -82,7 +82,7 @@ object Form1: TForm1
     Left = 8
     Top = 168
     Width = 257
-    Height = 525
+    Height = 482
     Anchors = [akLeft, akTop, akBottom]
     DefaultColWidth = 40
     DisplayOptions = [doAutoColResize, doKeyColFixed]
@@ -106,7 +106,7 @@ object Form1: TForm1
   end
   object SaveBtn: TButton
     Left = 271
-    Top = 656
+    Top = 618
     Width = 58
     Height = 32
     Anchors = [akLeft, akBottom]
@@ -189,7 +189,7 @@ object Form1: TForm1
     Left = 272
     Top = 241
     Width = 65
-    Height = 408
+    Height = 360
     Anchors = [akLeft, akTop, akRight, akBottom]
     Font.Charset = RUSSIAN_CHARSET
     Font.Color = clWindowText
@@ -227,6 +227,26 @@ object Form1: TForm1
     ParentFont = False
     State = cbChecked
     TabOrder = 11
+  end
+  object DelAlle: TLabeledEdit
+    Left = 168
+    Top = 660
+    Width = 65
+    Height = 33
+    EditLabel.Width = 157
+    EditLabel.Height = 25
+    EditLabel.Caption = 'Full deleting for dot'
+    LabelPosition = lpLeft
+    TabOrder = 12
+  end
+  object DelAll: TButton
+    Left = 239
+    Top = 661
+    Width = 75
+    Height = 32
+    Caption = 'Delete'
+    TabOrder = 13
+    OnClick = DelAllClick
   end
   object OpenDialog1: TOpenDialog
     Left = 168

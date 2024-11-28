@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <vcl.h>
 #include <vector>
+#include <set>
 #include "HelpForm.h"
 #pragma hdrstop
 
@@ -256,6 +257,36 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 	Memo1->Lines->Append(IntToStr((int)vec.size())+"<SIZE>"+IntToStr(Dots->RowCount));
 	for (unsigned int i = 0; i < vec.size(); i++)
 		Memo1->Lines->Append(IntToStr(vec[i].a)+" "+IntToStr(vec[i].b)+" "+IntToStr(vec[i].c));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::DelAllClick(TObject *Sender)
+{
+	std::set<unsigned int> full;
+	//std::vector<int
+   unsigned int c = 0;
+   unsigned int first = DelAlle->Text.ToIntDef(-1);
+   if (first < 0)
+   	return;
+   full.insert(first);
+  	while (full.size() != c)
+   {
+      c = full.size();
+      for (unsigned int i = 0; i < vec.size(); i++)
+      	if (full.find((vec[i].a)) != full.end() ||full.find((vec[i].b)) != full.end()
+         	||full.find((vec[i].c)) != full.end())
+         {
+            full.insert(vec[i].a);
+            full.insert(vec[i].b);
+            full.insert(vec[i].c);
+            //Memo1->Lines->Append(IntToStr(vec[i].b)+" "+IntToStr(vec[i].c));
+         }
+   }
+   for (std::set<unsigned int>::iterator el = full.begin(); el != full.end(); ++el)
+   	Memo1->Lines->Append(*el);
+ 	for (int i = 0; i < Dots->Strings->Count; i++)
+   	if (full.find(vec[i].a) != full.end())
+       	Dots->Strings->Strings[i] = "  ";
 }
 //---------------------------------------------------------------------------
 
