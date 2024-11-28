@@ -34,6 +34,7 @@ void __fastcall TForm1::OpenClick(TObject *Sender)
 			return ShowMessage ( "Cannot open file.");
 		SetBtn->Enabled = true;
 		RefreshNum->Visible = false;
+		full.clear();
 	}
 }
 //---------------------------------------------------------------------------
@@ -62,57 +63,56 @@ void __fastcall TForm1::SetBtnClick(TObject *Sender)
 		return;
 	Dots->Strings->Clear();
 	Data t;
+	vec.resize(nTri);
 	for (int i = 0; i < nTri; i++)
 	{
 		fread(&t, 6, 1, in);
-	  	Dots->InsertRow(i, IntToStr(t.a)+" "+IntToStr(t.b)+" "+IntToStr(t.c), true);
+		Dots->InsertRow(i+1, IntToStr(t.a)+" "+IntToStr(t.b)+" "+IntToStr(t.c), true);
+		vec[i] = t;
 	}
 	RefreshNum->Visible = false;
-	vec.resize(Dots->RowCount);
+	full.clear();
 }
 //---------------------------------------------------------------------------
-
+bool TForm1::StrToVector3(String row, Data &d)
+{
+	row = row.Trim();
+	int p = row.Pos(' ');
+	if (p < 1)
+		return true;
+	d.a = row.SubString(1, p-1).ToIntDef(-1);
+	row = row.SubString(p+1, row.Length() - p);
+	p = row.Pos(' ');
+	if (p < 1)
+		return true;
+	d.b = row.SubString(1, p-1).ToIntDef(-1);
+	row = row.SubString(p+1, row.Length() - p);
+	if (row.Length() < 1)
+		return true;
+	d.c = row.ToIntDef(-1);
+	if (d.a < 0 || d.b < 0 || d.c < 0)
+		return true;
+	return false;
+}
+//---------------------------------------------------------------------------
 void __fastcall TForm1::RefreshClick(TObject *Sender)
 {
 	int p;
+	vec.clear();
+	vec.reserve(Dots->Strings->Count);
+	Dots->Strings->BeginUpdate();
 	for (int i = 0; i < Dots->Strings->Count; i++)
 	{
-	 	String row = Dots->Cells[1][i];
-		row = row.Trim();
-		p = row.Pos(' ');
-		if (p < 1)
-		{
-		 	Dots->Cells[1][i] = "";
-			continue;
-		}
 		Data d;
-		d.a = row.SubString(1, p-1).ToIntDef(-1);
-		row = row.SubString(p+1, row.Length() - p);
-		p = row.Pos(' ');
-		if (p < 1)
+		if (StrToVector3(Dots->Cells[1][i], d))
 		{
-		 	Dots->Cells[1][i] = "";
-			continue;
-		}
-		d.b = row.SubString(1, p-1).ToIntDef(-1);
-		row = row.SubString(p+1, row.Length() - p);
-		if (row.Length() < 1)
-		{
-		 	Dots->Cells[1][i] = "";
-			continue;
-		}
-		d.c = row.ToIntDef(-1);
-		if (d.a < 0 || d.b < 0 || d.c < 0)
-		{
-		 	Dots->Cells[1][i] = "";
+			Dots->Cells[1][i] = "";
 			continue;
 		}
 	 	Dots->Cells[1][i] = IntToStr(d.a)+" "+IntToStr(d.b)+" "+IntToStr(d.c);
 		if (write)
 			fwrite(&d, 6, 1, out);
-		vec[i].a = d.a;
-		vec[i].b = d.b;
-		vec[i].c = d.c;
+		vec.push_back(d);
 	}
 	for (int i = 0; i < Dots->Strings->Count; i++)
 	{
@@ -122,8 +122,9 @@ void __fastcall TForm1::RefreshClick(TObject *Sender)
 			i--;
 		}
 		else
-	  		Dots->Cells[0][i] = i;
+	  		Dots->Cells[0][i] = i+1;
 	}
+	Dots->Strings->EndUpdate();
   	Base->Cells[1][0] = Dots->Strings->Count;
 	Base->Cells[1][1] = Dots->Strings->Count * 3;
 	Base->Cells[0][0] = "Num Triangles " + IntToStr(nTri)+"(init)";
@@ -230,25 +231,54 @@ void TForm1::Write(int size)
 
 void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (Key == VK_DELETE && Delete->Checked)
-	{
-		Data del = vec[Dots->Row];
-		if (Dots->Strings->Count > (int)vec.size())
+	if (Key == VK_DELETE && Dots->Row >= 0)
+		if (FullDelete->Checked)
 		{
-			Memo1->Lines->Append(Dots->Strings->Count);
-			Memo1->Lines->Append(vec.size());
-			return;
-		}
-		//Memo1->Lines->Append("Del "+IntToStr(Dots->Row)+"="+IntToStr(del.a)+" "+IntToStr(del.b)+" "+IntToStr(del.c));
-		for (int i = Dots->Strings->Count; i >= 0 ; i--)
-			if (del.Has(vec[i]))
+			unsigned int c = full.size();
+			Data del = vec[Dots->Row];
+			full.insert(del.a);
+			full.insert(del.b);
+			full.insert(del.c);
+			while (full.size() != c)
 			{
-	 //		  Memo1->Lines->Append(IntToStr(i)+":"+Dots->Strings->Strings[i]);
-				Dots->Strings->Strings[i] = "	";
-				//Dots->DeleteRow(i);
+				c = full.size();
+				for (unsigned int i = 0; i < vec.size(); i++)
+					if (full.find((vec[i].a)) != full.end() ||full.find((vec[i].b)) != full.end()
+						||full.find((vec[i].c)) != full.end())
+					{
+						full.insert(vec[i].a);
+						full.insert(vec[i].b);
+						full.insert(vec[i].c);
+						//Memo1->Lines->Append(IntToStr(vec[i].b)+" "+IntToStr(vec[i].c));
+					}
 			}
-	  	//RefreshClick(Sender);
-	}
+			Memo1->Lines->Clear();
+			for (std::set<unsigned int>::iterator el = full.begin(); el != full.end(); ++el)
+				Memo1->Lines->Append(*el);
+			for (int i = 0; i < Dots->Strings->Count; i++)
+				if (full.find(vec[i].a) != full.end())
+					if (Dots->Cells[0][i].IsEmpty() == false)
+						Dots->Strings->Strings[i] = "=----- "+Dots->Cells[1][i];
+		}
+		else if (Delete->Checked)
+		{
+			Data del = vec[Dots->Row];
+			if (Dots->Strings->Count > (int)vec.size())
+			{
+				Memo1->Lines->Append(Dots->Strings->Count);
+				Memo1->Lines->Append(vec.size());
+				return;
+			}
+			//Memo1->Lines->Append("Del "+IntToStr(Dots->Row)+"="+IntToStr(del.a)+" "+IntToStr(del.b)+" "+IntToStr(del.c));
+			for (int i = Dots->Strings->Count; i >= 0 ; i--)
+				if (del.Has(vec[i]))
+				{
+		 //		  Memo1->Lines->Append(IntToStr(i)+":"+Dots->Strings->Strings[i]);
+					Dots->Strings->Strings[i] = "	";
+					//Dots->DeleteRow(i);
+				}
+			//RefreshClick(Sender);
+		}
 }
 //---------------------------------------------------------------------------
 
@@ -260,33 +290,4 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::DelAllClick(TObject *Sender)
-{
-	std::set<unsigned int> full;
-	//std::vector<int
-   unsigned int c = 0;
-   unsigned int first = DelAlle->Text.ToIntDef(-1);
-   if (first < 0)
-   	return;
-   full.insert(first);
-  	while (full.size() != c)
-   {
-      c = full.size();
-      for (unsigned int i = 0; i < vec.size(); i++)
-      	if (full.find((vec[i].a)) != full.end() ||full.find((vec[i].b)) != full.end()
-         	||full.find((vec[i].c)) != full.end())
-         {
-            full.insert(vec[i].a);
-            full.insert(vec[i].b);
-            full.insert(vec[i].c);
-            //Memo1->Lines->Append(IntToStr(vec[i].b)+" "+IntToStr(vec[i].c));
-         }
-   }
-   for (std::set<unsigned int>::iterator el = full.begin(); el != full.end(); ++el)
-   	Memo1->Lines->Append(*el);
- 	for (int i = 0; i < Dots->Strings->Count; i++)
-   	if (full.find(vec[i].a) != full.end())
-       	Dots->Strings->Strings[i] = "  ";
-}
-//---------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@ object Form1: TForm1
   BorderIcons = [biSystemMenu, biMinimize, biMaximize, biHelp]
   Caption = 'Nif cutter'
   ClientHeight = 701
-  ClientWidth = 336
+  ClientWidth = 341
   Color = clBtnFace
   Font.Charset = RUSSIAN_CHARSET
   Font.Color = clWindowText
@@ -14,7 +14,7 @@ object Form1: TForm1
   OldCreateOrder = False
   OnClose = FormClose
   DesignSize = (
-    336
+    341
     701)
   PixelsPerInch = 120
   TextHeight = 25
@@ -82,7 +82,7 @@ object Form1: TForm1
     Left = 8
     Top = 168
     Width = 257
-    Height = 482
+    Height = 525
     Anchors = [akLeft, akTop, akBottom]
     DefaultColWidth = 40
     DisplayOptions = [doAutoColResize, doKeyColFixed]
@@ -106,8 +106,8 @@ object Form1: TForm1
   end
   object SaveBtn: TButton
     Left = 271
-    Top = 618
-    Width = 58
+    Top = 661
+    Width = 62
     Height = 32
     Anchors = [akLeft, akBottom]
     Caption = 'Save'
@@ -144,7 +144,7 @@ object Form1: TForm1
     OnClick = RefreshClick
   end
   object Help: TBitBtn
-    Left = 246
+    Left = 251
     Top = 8
     Width = 82
     Height = 32
@@ -154,6 +154,7 @@ object Form1: TForm1
     ParentDoubleBuffered = False
     TabOrder = 1
     OnClick = HelpClick
+    ExplicitLeft = 246
   end
   object RefreshNum: TBitBtn
     Left = 127
@@ -187,9 +188,9 @@ object Form1: TForm1
   end
   object Memo1: TMemo
     Left = 272
-    Top = 241
-    Width = 65
-    Height = 360
+    Top = 272
+    Width = 70
+    Height = 383
     Anchors = [akLeft, akTop, akRight, akBottom]
     Font.Charset = RUSSIAN_CHARSET
     Font.Color = clWindowText
@@ -228,25 +229,21 @@ object Form1: TForm1
     State = cbChecked
     TabOrder = 11
   end
-  object DelAlle: TLabeledEdit
-    Left = 168
-    Top = 660
-    Width = 65
-    Height = 33
-    EditLabel.Width = 157
-    EditLabel.Height = 25
-    EditLabel.Caption = 'Full deleting for dot'
-    LabelPosition = lpLeft
+  object FullDelete: TCheckBox
+    Left = 271
+    Top = 241
+    Width = 97
+    Height = 17
+    Caption = 'Full Delete'
+    Checked = True
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+    State = cbChecked
     TabOrder = 12
-  end
-  object DelAll: TButton
-    Left = 239
-    Top = 661
-    Width = 75
-    Height = 32
-    Caption = 'Delete'
-    TabOrder = 13
-    OnClick = DelAllClick
   end
   object OpenDialog1: TOpenDialog
     Left = 168
