@@ -29,8 +29,9 @@ __published:	// IDE-managed Components
 	TBitBtn *RefreshNum;
 	TMemo *Memo1;
 	TButton *Button1;
-	TCheckBox *Delete;
-	TCheckBox *FullDelete;
+	TComboBox *Deleting;
+	TLabel *Label1;
+	TButton *Button2;
 	void __fastcall OpenClick(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall SetBtnClick(TObject *Sender);
@@ -41,6 +42,7 @@ __published:	// IDE-managed Components
 	void __fastcall RefreshNumClick(TObject *Sender);
 	void __fastcall DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
 
 private:	// User declarations
 public:		// User declarations
@@ -49,6 +51,7 @@ public:		// User declarations
 	FILE *in, *out;
 	void SetRowCount(int r);
 	int pos;
+	int nVer;
 	int nTri;
 	int nDot;
 	bool write;
@@ -69,7 +72,17 @@ public:		// User declarations
 	std::vector<Data> vec;
 	std::set<unsigned int> full;
 	bool StrToVector3(String row, Data &d);
-
+	struct Vertice
+	{
+		float x,y,z;
+		void add(float d)
+		{
+			x += d;
+			y += d;
+			z += d;
+		}
+	};
+	std::vector<Vertice> vert;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;

@@ -13,15 +13,14 @@
 class TForm2 : public TForm
 {
 __published:	// IDE-managed Components
-	TImage *Image1;
 	TLabel *Label1;
 	TLabel *Label2;
 	TLabel *Label3;
 	TLabel *Label4;
 	TLabel *Label5;
-	TImage *Image2;
 	TButton *Done;
 	TPanel *Panel1;
+	TImage *Image2;
 	void __fastcall DoneClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations

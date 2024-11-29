@@ -4,7 +4,7 @@ object Form1: TForm1
   BorderIcons = [biSystemMenu, biMinimize, biMaximize, biHelp]
   Caption = 'Nif cutter'
   ClientHeight = 701
-  ClientWidth = 341
+  ClientWidth = 342
   Color = clBtnFace
   Font.Charset = RUSSIAN_CHARSET
   Font.Color = clWindowText
@@ -14,10 +14,18 @@ object Form1: TForm1
   OldCreateOrder = False
   OnClose = FormClose
   DesignSize = (
-    341
+    342
     701)
   PixelsPerInch = 120
   TextHeight = 25
+  object Label1: TLabel
+    Left = 271
+    Top = 232
+    Width = 71
+    Height = 50
+    Caption = 'Deleting level'
+    WordWrap = True
+  end
   object Offset: TLabeledEdit
     Left = 8
     Top = 72
@@ -28,7 +36,7 @@ object Form1: TForm1
     EditLabel.Caption = 'Offset of '#39'Num Triangles'#39
     NumbersOnly = True
     TabOrder = 2
-    Text = '1353'
+    Text = '485'
   end
   object Open: TButton
     Left = 8
@@ -144,7 +152,7 @@ object Form1: TForm1
     OnClick = RefreshClick
   end
   object Help: TBitBtn
-    Left = 251
+    Left = 252
     Top = 8
     Width = 82
     Height = 32
@@ -154,7 +162,7 @@ object Form1: TForm1
     ParentDoubleBuffered = False
     TabOrder = 1
     OnClick = HelpClick
-    ExplicitLeft = 246
+    ExplicitLeft = 247
   end
   object RefreshNum: TBitBtn
     Left = 127
@@ -188,9 +196,9 @@ object Form1: TForm1
   end
   object Memo1: TMemo
     Left = 272
-    Top = 272
-    Width = 70
-    Height = 383
+    Top = 327
+    Width = 71
+    Height = 328
     Anchors = [akLeft, akTop, akRight, akBottom]
     Font.Charset = RUSSIAN_CHARSET
     Font.Color = clWindowText
@@ -203,47 +211,46 @@ object Form1: TForm1
     ScrollBars = ssVertical
     TabOrder = 9
     WordWrap = False
+    ExplicitWidth = 66
   end
   object Button1: TButton
-    Left = 222
-    Top = 42
+    Left = 259
+    Top = 41
     Width = 75
     Height = 25
     Caption = 'vector'
     TabOrder = 10
     OnClick = Button1Click
   end
-  object Delete: TCheckBox
-    Left = 271
-    Top = 218
-    Width = 97
-    Height = 17
-    Caption = 'Delete'
-    Checked = True
-    Font.Charset = RUSSIAN_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Segoe UI'
-    Font.Style = []
-    ParentFont = False
-    State = cbChecked
+  object Deleting: TComboBox
+    Left = 274
+    Top = 288
+    Width = 55
+    Height = 33
+    Hint = 
+      'Pressing Delete: 1) One triangle leaves; 2) The triangle and all' +
+      ' connected leaves; 3) The triangle leaves and all block of model' +
+      ' in which it is; 4) The triangle leaves and all block of model i' +
+      'n which it is, search of the duplicated points.'
+    Style = csDropDownList
+    ItemHeight = 25
+    ItemIndex = 3
     TabOrder = 11
+    Text = '4'
+    Items.Strings = (
+      '1'
+      '2'
+      '3'
+      '4')
   end
-  object FullDelete: TCheckBox
-    Left = 271
-    Top = 241
-    Width = 97
-    Height = 17
-    Caption = 'Full Delete'
-    Checked = True
-    Font.Charset = RUSSIAN_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Segoe UI'
-    Font.Style = []
-    ParentFont = False
-    State = cbChecked
+  object Button2: TButton
+    Left = 304
+    Top = 72
+    Width = 75
+    Height = 25
+    Caption = 'Button2'
     TabOrder = 12
+    OnClick = Button2Click
   end
   object OpenDialog1: TOpenDialog
     Left = 168

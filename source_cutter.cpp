@@ -28,6 +28,8 @@ void __fastcall TForm1::OpenClick(TObject *Sender)
 	{
 		file = OpenDialog1->FileName;
 		Form1->Caption = "Nif cutter - "+file;
+		if (in)
+			fclose(in);
 		in = fopen(file.c_str(), "rb");
 		file = OpenDialog1->FileName;
 		if (!in)
@@ -35,6 +37,7 @@ void __fastcall TForm1::OpenClick(TObject *Sender)
 		SetBtn->Enabled = true;
 		RefreshNum->Visible = false;
 		full.clear();
+		vert.clear();
 	}
 }
 //---------------------------------------------------------------------------
@@ -51,10 +54,38 @@ void __fastcall TForm1::SetBtnClick(TObject *Sender)
 {
 	if (in == NULL)
 		return;
+	nVer = 0; //Num Vertices
 	nTri = 0;
 	nDot = 0;
-	pos = Offset->Text.ToInt();
-  	fseek(in, pos, SEEK_SET);
+	int enterpos = Offset->Text.ToInt();
+	fseek(in, enterpos, SEEK_SET);
+	fread(&nVer, 2, 1, in);
+	if (nVer > 9000)
+	{
+		SetBtn->Caption = nVer;
+		return;
+	}
+	int HasVertices;
+	fread(&HasVertices, 4, 1, in);
+	vert.clear();
+	vert.reserve(nVer);
+	Vertice v;
+	for (int i = 0; i < nVer; i++)
+	{
+		fread(&v, sizeof(float), 3, in);
+		vert.push_back(v);
+	}
+	//int HasNormals;
+	//fread(&HasNormals, 4, 1, in);
+	fseek(in, 4+4*3*nVer+4*3+4, SEEK_CUR);
+	int HasVertexColors;
+	fread(&HasVertexColors, 4, 1, in);
+	if (HasVertexColors != 0)
+		fseek(in, 4*4*nVer, SEEK_CUR);
+	fseek(in, 2+4+4*2*nVer, SEEK_CUR);
+	//////////////
+	pos = ftell(in);//Offset->Text.ToInt();
+	//fseek(in, pos, SEEK_SET);
 	fread(&nTri, 2, 1, in);
 	fread(&nDot, 4, 1, in);
 	Base->Cells[1][0] = nTri;
@@ -101,31 +132,32 @@ void __fastcall TForm1::RefreshClick(TObject *Sender)
 	vec.clear();
 	vec.reserve(Dots->Strings->Count);
 	Dots->Strings->BeginUpdate();
+	Dots->TopRow = 0;
+	Dots->Row = 0;
 	for (int i = 0; i < Dots->Strings->Count; i++)
 	{
 		Data d;
 		if (StrToVector3(Dots->Cells[1][i], d))
 		{
-			Dots->Cells[1][i] = "";
+			Dots->Cells[0][i] = "";
 			continue;
 		}
-	 	Dots->Cells[1][i] = IntToStr(d.a)+" "+IntToStr(d.b)+" "+IntToStr(d.c);
+		Dots->Cells[1][i] = IntToStr(d.a)+" "+IntToStr(d.b)+" "+IntToStr(d.c);
 		if (write)
 			fwrite(&d, 6, 1, out);
 		vec.push_back(d);
 	}
-	for (int i = 0; i < Dots->Strings->Count; i++)
+	for (int i = Dots->Strings->Count - 1; i >= 0 ; i--)
 	{
-		if (Dots->Cells[1][i].IsEmpty())
-		{
+		if (Dots->Cells[0][i].IsEmpty())
 			Dots->DeleteRow(i);
-			i--;
-		}
 		else
-	  		Dots->Cells[0][i] = i+1;
+			Dots->Cells[0][i] = i+1;
 	}
+	if ((unsigned)Dots->Strings->Count != vec.size())
+		ShowMessage(IntToStr(Dots->Strings->Count)+"=Stings Error vec="+IntToStr((int)vec.size()));
 	Dots->Strings->EndUpdate();
-  	Base->Cells[1][0] = Dots->Strings->Count;
+	Base->Cells[1][0] = Dots->Strings->Count;
 	Base->Cells[1][1] = Dots->Strings->Count * 3;
 	Base->Cells[0][0] = "Num Triangles " + IntToStr(nTri)+"(init)";
 	Base->Cells[0][1] = "Num Triangle Points " + IntToStr(nDot)+"(init)";
@@ -142,19 +174,19 @@ void __fastcall TForm1::HelpClick(TObject *Sender)
 void __fastcall TForm1::BaseSetEditText(TObject *Sender, int ACol, int ARow, const UnicodeString Value)
 {
 	RefreshNum->Tag = ARow;
- 	RefreshNum->Visible = true;
+	RefreshNum->Visible = true;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::RefreshNumClick(TObject *Sender)
 {
- 	if (RefreshNum->Tag == 1)
+	if (RefreshNum->Tag == 1)
 	{
 		int d = Base->Cells[1][1].ToIntDef(-1);
 		if (d < 0)
 			d = 0;
 		if (d % 3 != 0)
-		 	return ShowMessage("Points should be three times more, than triangles.");
+			return ShowMessage("Points should be three times more, than triangles.");
 		Base->Cells[1][0] = d / 3;
 		SetRowCount(d/3);
 		return;
@@ -171,9 +203,9 @@ void __fastcall TForm1::RefreshNumClick(TObject *Sender)
 void TForm1::SetRowCount(int r)
 {
 	for (int i = Dots->Strings->Count; i < r; i++)
-	 	Dots->InsertRow(i+1, "0 1 2", true);
+		Dots->InsertRow(i+1, "0 1 2", true);
 	for (int i = Dots->Strings->Count; i > r; i--)
-	 	Dots->DeleteRow(i-1);
+		Dots->DeleteRow(i-1);
 }
 //---------------------------------------------------------------------------
 
@@ -181,11 +213,20 @@ void __fastcall TForm1::SaveBtnClick(TObject *Sender)
 {
 	//Base->Cells[1][1] = Dots->RowCount;
 	//Base->Cells[1][1] = Base->Cells[1][1] + IntToStr(Dots->Strings->Count);
- 	//SetRowCount(Base->Cells[1][0].ToIntDef(0));
-	int n = Base->Cells[1][0].ToIntDef(-1);
-	int d = Base->Cells[1][1].ToIntDef(-1);
-	if (n < 0 || d < 0)
-		return;
+	//SetRowCount(Base->Cells[1][0].ToIntDef(0));
+	Dots->TopRow = 0;
+	Dots->Row = 0;
+	Dots->Strings->BeginUpdate();
+	for (int i = Dots->Strings->Count - 1; i >= 0 ; i--)
+	{
+		if (Dots->Cells[0][i].IsEmpty())
+			Dots->DeleteRow(i);
+		else
+			Dots->Cells[0][i] = i+1;
+	}
+	Dots->Strings->EndUpdate();
+	int n = Dots->Strings->Count;
+	int d = Dots->Strings->Count * 3;
 	String save = file;
 	for (int i = file.Length(); i > 0; i--)
 		if (file[i] == '\\')
@@ -193,14 +234,14 @@ void __fastcall TForm1::SaveBtnClick(TObject *Sender)
 			save.Insert("X_", i+1);
 			break;
 		}
- 	out = fopen(save.c_str(), "wb");
+	out = fopen(save.c_str(), "wb");
 	if (out == NULL)
 		return ShowMessage("Cannot create nif file.");
 	fseek(in, 0, SEEK_END);
 	int EoF = ftell(in);
 	fseek(in, 0, SEEK_SET);
 	Write(pos);
-  	fwrite(&n, 2, 1, out);
+	fwrite(&n, 2, 1, out);
 	fwrite(&d, 4, 1, out);
 	write = true;
 	RefreshClick(Sender);
@@ -208,13 +249,14 @@ void __fastcall TForm1::SaveBtnClick(TObject *Sender)
 	fseek(in, 2+4+nTri*6, SEEK_CUR);
 	Write(EoF - ftell(in));
 	fclose(out);
+	out = NULL;
 	delete []mem;
 	mem = NULL;
 }
 //---------------------------------------------------------------------------
 void TForm1::Write(int size)
 {
- 	static int cap = 65536;
+	static int cap = 65536;
 	if (mem == NULL)
 		mem = new byte[cap];
 	int Len;
@@ -232,13 +274,15 @@ void TForm1::Write(int size)
 void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	if (Key == VK_DELETE && Dots->Row >= 0)
-		if (FullDelete->Checked)
+		if (Deleting->ItemIndex >= 2)//3
 		{
+			Offset->EditLabel->Caption = "";
 			unsigned int c = full.size();
 			Data del = vec[Dots->Row];
 			full.insert(del.a);
 			full.insert(del.b);
 			full.insert(del.c);
+			FLUSH:
 			while (full.size() != c)
 			{
 				c = full.size();
@@ -252,6 +296,32 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 						//Memo1->Lines->Append(IntToStr(vec[i].b)+" "+IntToStr(vec[i].c));
 					}
 			}
+			if (Deleting->ItemIndex >= 3) //4)vertic
+			{
+				//for (std::vector<Vertice>::iterator V = vert.begin(); V != vert.end(); ++V)
+				for (unsigned int i = 0; i < vert.size(); i++)
+				{
+					Vertice ot = vert[i];
+					Vertice to = vert[i];
+					ot.add(-0.04);
+					to.add(0.04);
+					for (std::set<unsigned int>::iterator el = full.begin(); el != full.end(); ++el)
+						if (i != *el && vert[*el].x>ot.x && vert[*el].x<to.x
+										 && vert[*el].y>ot.y && vert[*el].y<to.y
+										 && vert[*el].z>ot.z && vert[*el].z<to.z)
+						{
+							//Memo1->Lines->Append(IntToStr((int)*el)+")"+FloatToStr(vert[*el].x));
+							full.insert(i);
+						}
+					if (full.size() != c)
+					{
+						Offset->EditLabel->Caption = Offset->EditLabel->Caption+IntToStr((int)(full.size()-c))+" ";
+						goto FLUSH;
+					}
+
+				}
+			}
+			//Вывод удаленных номеров треугольников
 			Memo1->Lines->Clear();
 			for (std::set<unsigned int>::iterator el = full.begin(); el != full.end(); ++el)
 				Memo1->Lines->Append(*el);
@@ -260,7 +330,7 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 					if (Dots->Cells[0][i].IsEmpty() == false)
 						Dots->Strings->Strings[i] = "=----- "+Dots->Cells[1][i];
 		}
-		else if (Delete->Checked)
+		else if (Deleting->ItemIndex == 1)//2
 		{
 			Data del = vec[Dots->Row];
 			if (Dots->Strings->Count > (int)vec.size())
@@ -290,4 +360,12 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TForm1::Button2Click(TObject *Sender)
+{
+	Memo1->Lines->Append(nVer);
+	Memo1->Lines->Append(ftell(in));
+	Memo1->Lines->Append(vert.size());
+	Memo1->Lines->Append(vert.back().x);
+}
+//---------------------------------------------------------------------------
 
