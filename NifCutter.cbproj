@@ -3,7 +3,7 @@
 			<ProjectGuid>{66C69583-75ED-4766-8753-E24B03FE5EA8}</ProjectGuid>
 			<ProjectVersion>12.0</ProjectVersion>
 			<MainSource>NifCutter.cpp</MainSource>
-			<Config Condition="'$(Config)'==''">Debug</Config>
+			<Config Condition="'$(Config)'==''">Release</Config>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
 			<Base>true</Base>
@@ -57,6 +57,7 @@
 			<BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<BCC_AllCodeguardOptions>false</BCC_AllCodeguardOptions>
 			<DynamicRTL>false</DynamicRTL>
 			<Defines>NDEBUG;$(Defines)</Defines>
 			<IntermediateOutputDir>Release</IntermediateOutputDir>
@@ -64,14 +65,6 @@
 			<TASM_Debugging>None</TASM_Debugging>
 		</PropertyGroup>
 		<ItemGroup>
-			<CppCompile Include="source_cutter.cpp">
-				<Form>Form1</Form>
-				<DependentOn>source_cutter.h</DependentOn>
-				<BuildOrder>2</BuildOrder>
-			</CppCompile>
-			<ResFiles Include="NifCutter.res">
-				<BuildOrder>1</BuildOrder>
-			</ResFiles>
 			<CppCompile Include="NifCutter.cpp">
 				<BuildOrder>0</BuildOrder>
 			</CppCompile>
@@ -80,8 +73,16 @@
 				<DependentOn>HelpForm.h</DependentOn>
 				<BuildOrder>3</BuildOrder>
 			</CppCompile>
-			<FormResources Include="source_cutter.dfm"/>
+			<CppCompile Include="source_cutter.cpp">
+				<Form>Form1</Form>
+				<DependentOn>source_cutter.h</DependentOn>
+				<BuildOrder>2</BuildOrder>
+			</CppCompile>
+			<ResFiles Include="NifCutter.res">
+				<BuildOrder>1</BuildOrder>
+			</ResFiles>
 			<FormResources Include="HelpForm.dfm"/>
+			<FormResources Include="source_cutter.dfm"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
@@ -109,7 +110,7 @@
 						<VersionInfo Name="MajorVer">1</VersionInfo>
 						<VersionInfo Name="MinorVer">0</VersionInfo>
 						<VersionInfo Name="Release">0</VersionInfo>
-						<VersionInfo Name="Build">3</VersionInfo>
+						<VersionInfo Name="Build">6</VersionInfo>
 						<VersionInfo Name="Debug">False</VersionInfo>
 						<VersionInfo Name="PreRelease">False</VersionInfo>
 						<VersionInfo Name="Special">False</VersionInfo>
@@ -121,7 +122,7 @@
 					<VersionInfoKeys>
 						<VersionInfoKeys Name="CompanyName"/>
 						<VersionInfoKeys Name="FileDescription"/>
-						<VersionInfoKeys Name="FileVersion">1.0.0.3</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">1.0.0.6</VersionInfoKeys>
 						<VersionInfoKeys Name="InternalName"/>
 						<VersionInfoKeys Name="LegalCopyright"/>
 						<VersionInfoKeys Name="LegalTrademarks">Larkin</VersionInfoKeys>

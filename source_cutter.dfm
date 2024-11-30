@@ -20,11 +20,18 @@ object Form1: TForm1
   TextHeight = 25
   object Label1: TLabel
     Left = 271
-    Top = 232
+    Top = 241
     Width = 71
     Height = 50
     Caption = 'Deleting level'
     WordWrap = True
+  end
+  object Delco: TLabel
+    Left = 271
+    Top = 218
+    Width = 45
+    Height = 25
+    Caption = 'Delco'
   end
   object Offset: TLabeledEdit
     Left = 8
@@ -41,7 +48,7 @@ object Form1: TForm1
   object Open: TButton
     Left = 8
     Top = 8
-    Width = 97
+    Width = 105
     Height = 32
     Caption = 'Open Nif'
     TabOrder = 0
@@ -162,7 +169,6 @@ object Form1: TForm1
     ParentDoubleBuffered = False
     TabOrder = 1
     OnClick = HelpClick
-    ExplicitLeft = 247
   end
   object RefreshNum: TBitBtn
     Left = 127
@@ -196,9 +202,9 @@ object Form1: TForm1
   end
   object Memo1: TMemo
     Left = 272
-    Top = 327
+    Top = 336
     Width = 71
-    Height = 328
+    Height = 319
     Anchors = [akLeft, akTop, akRight, akBottom]
     Font.Charset = RUSSIAN_CHARSET
     Font.Color = clWindowText
@@ -211,7 +217,6 @@ object Form1: TForm1
     ScrollBars = ssVertical
     TabOrder = 9
     WordWrap = False
-    ExplicitWidth = 66
   end
   object Button1: TButton
     Left = 259
@@ -223,8 +228,8 @@ object Form1: TForm1
     OnClick = Button1Click
   end
   object Deleting: TComboBox
-    Left = 274
-    Top = 288
+    Left = 271
+    Top = 297
     Width = 55
     Height = 33
     Hint = 

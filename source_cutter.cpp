@@ -20,6 +20,7 @@ __fastcall TForm1::TForm1(TComponent* Owner)	: TForm(Owner)
 	Dots->Strings->Clear();
 	write = false;
 	mem = NULL;
+   Delco->Caption = "";
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::OpenClick(TObject *Sender)
@@ -126,6 +127,15 @@ bool TForm1::StrToVector3(String row, Data &d)
 	return false;
 }
 //---------------------------------------------------------------------------
+void TForm1::RefreshNums(int ntri)
+{
+	Base->Cells[1][0] = ntri;
+	Base->Cells[1][1] = ntri * 3;
+	Base->Cells[0][0] = "Num Triangles " + IntToStr(nTri)+"(init)";
+	Base->Cells[0][1] = "Num Triangle Points " + IntToStr(nDot)+"(init)";
+	RefreshNum->Visible = false;
+}
+//---------------------------------------------------------------------------
 void __fastcall TForm1::RefreshClick(TObject *Sender)
 {
 	int p;
@@ -219,7 +229,7 @@ void __fastcall TForm1::SaveBtnClick(TObject *Sender)
 	Dots->Strings->BeginUpdate();
 	for (int i = Dots->Strings->Count - 1; i >= 0 ; i--)
 	{
-		if (Dots->Cells[0][i].IsEmpty())
+		if (Dots->Cells[0][i].IsEmpty() ||Dots->Cells[1][i].Length() < 5)
 			Dots->DeleteRow(i);
 		else
 			Dots->Cells[0][i] = i+1;
@@ -276,7 +286,6 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 	if (Key == VK_DELETE && Dots->Row >= 0)
 		if (Deleting->ItemIndex >= 2)//3
 		{
-			Offset->EditLabel->Caption = "";
 			unsigned int c = full.size();
 			Data del = vec[Dots->Row];
 			full.insert(del.a);
@@ -299,6 +308,7 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 			if (Deleting->ItemIndex >= 3) //4)vertic
 			{
 				//for (std::vector<Vertice>::iterator V = vert.begin(); V != vert.end(); ++V)
+            c = full.size();
 				for (unsigned int i = 0; i < vert.size(); i++)
 				{
 					Vertice ot = vert[i];
@@ -315,10 +325,9 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 						}
 					if (full.size() != c)
 					{
-						Offset->EditLabel->Caption = Offset->EditLabel->Caption+IntToStr((int)(full.size()-c))+" ";
+						//Offset->EditLabel->Caption = Offset->EditLabel->Caption+IntToStr((int)(full.size()-c))+" ";
 						goto FLUSH;
 					}
-
 				}
 			}
 			//Вывод удаленных номеров треугольников
@@ -329,6 +338,8 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 				if (full.find(vec[i].a) != full.end())
 					if (Dots->Cells[0][i].IsEmpty() == false)
 						Dots->Strings->Strings[i] = "=----- "+Dots->Cells[1][i];
+         Delco->Caption = IntToStr((int)full.size())+ " deleted";
+         full.clear();
 		}
 		else if (Deleting->ItemIndex == 1)//2
 		{
@@ -339,15 +350,14 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 				Memo1->Lines->Append(vec.size());
 				return;
 			}
-			//Memo1->Lines->Append("Del "+IntToStr(Dots->Row)+"="+IntToStr(del.a)+" "+IntToStr(del.b)+" "+IntToStr(del.c));
-			for (int i = Dots->Strings->Count; i >= 0 ; i--)
-				if (del.Has(vec[i]))
-				{
-		 //		  Memo1->Lines->Append(IntToStr(i)+":"+Dots->Strings->Strings[i]);
-					Dots->Strings->Strings[i] = "	";
-					//Dots->DeleteRow(i);
-				}
-			//RefreshClick(Sender);
+         Delco->Tag = 0;
+			for (int i = Dots->Strings->Count-1; i >= 0 ; i--)
+				if (del.Has(vec[i]) && Dots->Cells[0][i].IsEmpty() == false)
+            {
+					Dots->Strings->Strings[i] = "=--- "+Dots->Cells[1][i];
+               Delco->Tag ++;
+            }
+        	Delco->Caption = IntToStr(Delco->Tag)+ " deleted";
 		}
 }
 //---------------------------------------------------------------------------

@@ -32,6 +32,7 @@ __published:	// IDE-managed Components
 	TComboBox *Deleting;
 	TLabel *Label1;
 	TButton *Button2;
+	TLabel *Delco;
 	void __fastcall OpenClick(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall SetBtnClick(TObject *Sender);
@@ -83,6 +84,7 @@ public:		// User declarations
 		}
 	};
 	std::vector<Vertice> vert;
+   void RefreshNums(int ntri);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;
