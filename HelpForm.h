@@ -19,8 +19,8 @@ __published:	// IDE-managed Components
 	TLabel *Label4;
 	TLabel *Label5;
 	TButton *Done;
-	TPanel *Panel1;
 	TImage *Image2;
+	TImage *Image1;
 	void __fastcall DoneClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations

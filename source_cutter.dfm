@@ -21,9 +21,9 @@ object Form1: TForm1
   object Label1: TLabel
     Left = 271
     Top = 241
-    Width = 71
+    Width = 68
     Height = 50
-    Caption = 'Deleting level'
+    Caption = 'Level of deleting:'
     WordWrap = True
   end
   object Delco: TLabel
@@ -38,12 +38,11 @@ object Form1: TForm1
     Top = 72
     Width = 201
     Height = 33
-    EditLabel.Width = 198
+    EditLabel.Width = 206
     EditLabel.Height = 25
-    EditLabel.Caption = 'Offset of '#39'Num Triangles'#39
+    EditLabel.Caption = 'Offset of '#39'NiTriShapeData'#39
     NumbersOnly = True
     TabOrder = 2
-    Text = '485'
   end
   object Open: TButton
     Left = 8
@@ -126,7 +125,8 @@ object Form1: TForm1
     Height = 32
     Anchors = [akLeft, akBottom]
     Caption = 'Save'
-    TabOrder = 8
+    Enabled = False
+    TabOrder = 9
     OnClick = SaveBtnClick
   end
   object Refresh: TBitBtn
@@ -163,7 +163,6 @@ object Form1: TForm1
     Top = 8
     Width = 82
     Height = 32
-    Anchors = [akTop, akRight]
     DoubleBuffered = True
     Kind = bkHelp
     ParentDoubleBuffered = False
@@ -200,7 +199,7 @@ object Form1: TForm1
     Visible = False
     OnClick = RefreshNumClick
   end
-  object Memo1: TMemo
+  object log: TMemo
     Left = 272
     Top = 336
     Width = 71
@@ -212,10 +211,11 @@ object Form1: TForm1
     Font.Name = 'Segoe UI'
     Font.Style = []
     Lines.Strings = (
-      'Memo1')
+      'log')
     ParentFont = False
     ScrollBars = ssVertical
-    TabOrder = 9
+    TabOrder = 10
+    Visible = False
     WordWrap = False
   end
   object Button1: TButton
@@ -224,7 +224,7 @@ object Form1: TForm1
     Width = 75
     Height = 25
     Caption = 'vector'
-    TabOrder = 10
+    TabOrder = 11
     OnClick = Button1Click
   end
   object Deleting: TComboBox
@@ -240,7 +240,9 @@ object Form1: TForm1
     Style = csDropDownList
     ItemHeight = 25
     ItemIndex = 3
-    TabOrder = 11
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 8
     Text = '4'
     Items.Strings = (
       '1'

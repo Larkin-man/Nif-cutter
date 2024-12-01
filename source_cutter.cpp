@@ -104,6 +104,7 @@ void __fastcall TForm1::SetBtnClick(TObject *Sender)
 	}
 	RefreshNum->Visible = false;
 	full.clear();
+	SaveBtn->Enabled = true;
 }
 //---------------------------------------------------------------------------
 bool TForm1::StrToVector3(String row, Data &d)
@@ -178,6 +179,7 @@ void __fastcall TForm1::RefreshClick(TObject *Sender)
 void __fastcall TForm1::HelpClick(TObject *Sender)
 {
 	Form2->Show();
+	log->Visible = true;
 }
 //---------------------------------------------------------------------------
 
@@ -331,9 +333,9 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 				}
 			}
 			//Вывод удаленных номеров треугольников
-			Memo1->Lines->Clear();
+			log->Lines->Clear();
 			for (std::set<unsigned int>::iterator el = full.begin(); el != full.end(); ++el)
-				Memo1->Lines->Append(*el);
+				tolog(*el);
 			for (int i = 0; i < Dots->Strings->Count; i++)
 				if (full.find(vec[i].a) != full.end())
 					if (Dots->Cells[0][i].IsEmpty() == false)
@@ -346,8 +348,8 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 			Data del = vec[Dots->Row];
 			if (Dots->Strings->Count > (int)vec.size())
 			{
-				Memo1->Lines->Append(Dots->Strings->Count);
-				Memo1->Lines->Append(vec.size());
+				tolog(Dots->Strings->Count);
+				tolog(vec.size());
 				return;
 			}
          Delco->Tag = 0;
@@ -364,18 +366,18 @@ void __fastcall TForm1::DotsKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
 
 void __fastcall TForm1::Button1Click(TObject *Sender)
 {
-	Memo1->Lines->Append(IntToStr((int)vec.size())+"<SIZE>"+IntToStr(Dots->RowCount));
+	tolog(IntToStr((int)vec.size())+"<SIZE>"+IntToStr(Dots->RowCount));
 	for (unsigned int i = 0; i < vec.size(); i++)
-		Memo1->Lines->Append(IntToStr(vec[i].a)+" "+IntToStr(vec[i].b)+" "+IntToStr(vec[i].c));
+		tolog(IntToStr(vec[i].a)+" "+IntToStr(vec[i].b)+" "+IntToStr(vec[i].c));
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::Button2Click(TObject *Sender)
 {
-	Memo1->Lines->Append(nVer);
-	Memo1->Lines->Append(ftell(in));
-	Memo1->Lines->Append(vert.size());
-	Memo1->Lines->Append(vert.back().x);
+	tolog(nVer);
+	tolog(ftell(in));
+	tolog(vert.size());
+	tolog(vert.back().x);
 }
 //---------------------------------------------------------------------------
 

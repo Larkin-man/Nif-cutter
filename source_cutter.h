@@ -27,7 +27,7 @@ __published:	// IDE-managed Components
 	TBitBtn *Refresh;
 	TBitBtn *Help;
 	TBitBtn *RefreshNum;
-	TMemo *Memo1;
+	TMemo *log;
 	TButton *Button1;
 	TComboBox *Deleting;
 	TLabel *Label1;
@@ -85,6 +85,12 @@ public:		// User declarations
 	};
 	std::vector<Vertice> vert;
    void RefreshNums(int ntri);
+   void tolog(String str)
+   {
+      if (log->Visible)
+      	log->Lines->Append(str);
+
+   }
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;
